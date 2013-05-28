@@ -25,41 +25,55 @@ public class GraphController {
         return instance;
     }
 
-    public Graph getGraph() {
+    synchronized Graph getGraph() {
         return graph;
     }
 
-    public void addVertex(Vertex vertex) {
+    public synchronized void addVertex(Vertex vertex) {
         graph.addVertex(vertex);
     }
 
-    public void removeVertex(Vertex vertex) {
+    public synchronized void removeVertex(Vertex vertex) {
         graph.removeVertex(vertex);
     }
 
-    public List<Vertex> getVertexes() {
+    public synchronized List<Vertex> getVertexes() {
         return graph.vertexes();
     }
 
-    public void addEdge(Vertex begin,Vertex end, NormalDistribution weight){
+    public synchronized void addEdge(Vertex begin,Vertex end, NormalDistribution weight){
         Edge.apply(begin,end,weight);
     }
 
-    public void addEdge(Vertex begin,Vertex end, Double expectation,Double variance){
+    public synchronized void addEdge(Vertex begin,Vertex end, Double expectation,Double variance){
         Edge.apply(begin,end,expectation,variance);
     }
 
-    public void addEdge(Vertex begin,Vertex end, Double expectation){
+    public synchronized void addEdge(Vertex begin,Vertex end, Double expectation){
         Edge.apply(begin,end,expectation,0);
     }
 
-    public void removeEdge(Edge edge){
+    public synchronized void removeEdge(Edge edge){
         graph.removeEdge(edge);
     }
 
-    public List<Edge> getEdges(){
+    public synchronized List<Edge> getEdges(){
         return graph.edges();
     }
 
+    public synchronized void setStart(Vertex vertex){
+        graph.setStart(vertex);
+    }
 
+    public synchronized Vertex getStart(){
+        return graph.start();
+    }
+
+    public synchronized void setFinish(Vertex vertex){
+        graph.setFinish(vertex);
+    }
+
+    public synchronized Vertex getFinish(){
+        return graph.finish();
+    }
 }

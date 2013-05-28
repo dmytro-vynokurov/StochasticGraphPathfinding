@@ -2,13 +2,7 @@ package graph
 
 import scala.collection.mutable.Set
 
-/**
- * Created with IntelliJ IDEA.
- * User: Vinokurov
- * Date: 12.05.13
- * Time: 15:54
- * To change this template use File | Settings | File Templates.
- */
+
 class Graph(_vertexes: List[Vertex]) {
   def this() = this(Nil)
 
@@ -17,19 +11,19 @@ class Graph(_vertexes: List[Vertex]) {
   var finish: Vertex = _
   var checkpointLines: List[CheckpointLine] = List()
 
-  def addVertex(v: Vertex) = {
+  def addVertex(v: Vertex) {
     vertexes = vertexes ::: List(v)
     updateStartFinish()
   }
 
   def removeVertex(v: Vertex) {
-    vertexes = removeFromList(vertexes,v)
+    vertexes = removeFromList(vertexes, v)
     updateStartFinish()
   }
 
   private def removeFromList[T](vertexes: List[T], v: T): List[T] = {
-    if (vertexes contains v) return vertexes diff List(v)
-    else return vertexes
+    if (vertexes contains v) vertexes diff List(v)
+    else vertexes
   }
 
   def removeEdge(e: Edge) {
@@ -38,9 +32,7 @@ class Graph(_vertexes: List[Vertex]) {
     if (edgesConnectingWithLonelyVertexes contains e)
       throw new IllegalArgumentException("Edge cannot be removed since it connects the lonely vertex to the graph")
 
-    for (
-      vertex <- vertexes;
-    ) vertex.edges-=e
+    for (v <- vertexes) v.edges -= e
   }
 
   def setStart(v: Vertex) {
@@ -55,26 +47,26 @@ class Graph(_vertexes: List[Vertex]) {
     updateStartFinish()
   }
 
-  private def updateStartFinish(){
-    val vertexesButStart={
-      if (start==null) vertexes
-      else removeFromList(vertexes,start)
+  private def updateStartFinish() {
+    val vertexesButStart = {
+      if (start == null) vertexes
+      else removeFromList(vertexes, start)
     }
-    val vertexesButEnds={
-      if(finish==null)vertexesButStart
-      else removeFromList(vertexesButStart,finish)
-    }
-
-    if(start==null){
-      start=vertexesButEnds head
+    val vertexesButEnds = {
+      if (finish == null) vertexesButStart
+      else removeFromList(vertexesButStart, finish)
     }
 
-    if (finish==null){
-      finish=vertexesButEnds last
+    if (start == null) {
+      start = vertexesButEnds head
+    }
+
+    if (finish == null) {
+      finish = vertexesButEnds last
     }
   }
 
-  def edges=vertexes.flatMap(_.edges)
+  def edges = vertexes.flatMap(_.edges)
 
   class CheckpointLine(_vertexes: List[Vertex]) {
 
