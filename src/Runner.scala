@@ -1,13 +1,6 @@
-import graph.{Graph, Edge, Vertex}
-import stochastic.NormalDistribution
+import _root_.graph.{Graph, Edge, Vertex}
+import _root_.stochastic.NormalDistribution
 
-/**
- * Created with IntelliJ IDEA.
- * User: Vinokurov
- * Date: 12.05.13
- * Time: 15:47
- * To change this template use File | Settings | File Templates.
- */
 object Runner {
   def main(args: Array[String]) {
     val v1 = new Vertex("1")

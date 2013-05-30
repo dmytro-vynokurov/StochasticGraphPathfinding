@@ -1,7 +1,6 @@
 package windows;
 
 import javax.swing.*;
-import java.awt.event.*;
 
 public class InputVertex extends JDialog {
     private JPanel contentPane;

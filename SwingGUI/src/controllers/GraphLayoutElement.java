@@ -2,16 +2,10 @@ package controllers;
 
 import graph.Vertex;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Vinokurov
- * Date: 28.05.13
- * Time: 21:01
- * To change this template use File | Settings | File Templates.
- */
+
 public class GraphLayoutElement {
-    int x=-1;
-    int y=-1;
+    int x = -1;
+    int y = -1;
     Vertex vertex;
 
     public GraphLayoutElement(Vertex vertex) {

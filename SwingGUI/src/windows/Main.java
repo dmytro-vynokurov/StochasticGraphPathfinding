@@ -4,13 +4,7 @@ import elements.GraphPanel;
 
 import javax.swing.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Vinokurov
- * Date: 27.05.13
- * Time: 10:41
- * To change this template use File | Settings | File Templates.
- */
+
 public class Main {
     private JPanel mainPanel;
     private JButton addVertexButton;
@@ -30,12 +24,12 @@ public class Main {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Stochastic graph pathfinding");
         frame.setContentPane(new Main().mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
 
     private void createUIComponents() {
-        graphPanel=new GraphPanel();
+        graphPanel = new GraphPanel();
     }
 }

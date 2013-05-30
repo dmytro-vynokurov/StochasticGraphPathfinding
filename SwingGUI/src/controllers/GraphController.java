@@ -6,13 +6,6 @@ import graph.Vertex;
 import scala.collection.immutable.List;
 import stochastic.NormalDistribution;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Vinokurov
- * Date: 27.05.13
- * Time: 11:05
- * To change this template use File | Settings | File Templates.
- */
 public class GraphController {
     private static GraphController instance = new GraphController();
     private Graph graph;
@@ -41,39 +34,39 @@ public class GraphController {
         return graph.vertexes();
     }
 
-    public synchronized void addEdge(Vertex begin,Vertex end, NormalDistribution weight){
-        Edge.apply(begin,end,weight);
+    public synchronized void addEdge(Vertex begin, Vertex end, NormalDistribution weight) {
+        Edge.apply(begin, end, weight);
     }
 
-    public synchronized void addEdge(Vertex begin,Vertex end, Double expectation,Double variance){
-        Edge.apply(begin,end,expectation,variance);
+    public synchronized void addEdge(Vertex begin, Vertex end, Double expectation, Double variance) {
+        Edge.apply(begin, end, expectation, variance);
     }
 
-    public synchronized void addEdge(Vertex begin,Vertex end, Double expectation){
-        Edge.apply(begin,end,expectation,0);
+    public synchronized void addEdge(Vertex begin, Vertex end, Double expectation) {
+        Edge.apply(begin, end, expectation, 0);
     }
 
-    public synchronized void removeEdge(Edge edge){
+    public synchronized void removeEdge(Edge edge) {
         graph.removeEdge(edge);
     }
 
-    public synchronized List<Edge> getEdges(){
+    public synchronized List<Edge> getEdges() {
         return graph.edges();
     }
 
-    public synchronized void setStart(Vertex vertex){
+    public synchronized void setStart(Vertex vertex) {
         graph.setStart(vertex);
     }
 
-    public synchronized Vertex getStart(){
+    public synchronized Vertex getStart() {
         return graph.start();
     }
 
-    public synchronized void setFinish(Vertex vertex){
+    public synchronized void setFinish(Vertex vertex) {
         graph.setFinish(vertex);
     }
 
-    public synchronized Vertex getFinish(){
+    public synchronized Vertex getFinish() {
         return graph.finish();
     }
 }
