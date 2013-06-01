@@ -33,8 +33,7 @@ class Edge(_begin: Vertex, _end: Vertex, _weight: NormalDistribution) {
 
   def touches(v: Vertex): Boolean = ((v == begin) || (v == end))
 
-  override def toString: String =
-    return "Edge:\t" + begin.name + "\tto\t" + end.name + "\tWeight: " + weight
+  override def toString = "Edge( " + begin.name + " - " + end.name + "| " + weight + " )"
 }
 
 object Edge {

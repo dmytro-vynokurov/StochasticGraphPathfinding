@@ -19,7 +19,9 @@ class Vertex(_name: String) {
 
   def edgeConnectsWith(other: Vertex): Edge = edges.find(_ touches other).get
 
-  override def toString = "Vertex: " + name + "\tDistance from finish: " + distanceFromFinish + "\tAncestor: " + ancestorToString
+  override def toString = "Vertex( " + name + " )"
+
+  def fullInfo = "Vertex: " + name + "\tDistance from finish: " + distanceFromFinish + "\tAncestor: " + ancestorToString
 
   private def ancestorToString: String = if (ancestor != null) ancestor.name.toString else "None"
 }

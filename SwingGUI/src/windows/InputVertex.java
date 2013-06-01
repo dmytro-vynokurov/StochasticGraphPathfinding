@@ -1,59 +1,78 @@
 package windows;
 
+import controllers.GraphController;
+import eventhandling.GraphChangedEvent;
+import eventhandling.GraphChangedListener;
+import graph.Vertex;
+
 import javax.swing.*;
+import javax.swing.event.EventListenerList;
+import java.awt.event.*;
 
 public class InputVertex extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
+    private JTextField nameField;
+    private EventListenerList listenerList = new EventListenerList();
 
     public InputVertex() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-//        buttonOK.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                onOK();
-//            }
-//        });
-//
-//        buttonCancel.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                onCancel();
-//            }
-//        });
-//
-//        // call onCancel() when cross is clicked
-//        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-//        addWindowListener(new WindowAdapter() {
-//            public void windowClosing(WindowEvent e) {
-//                onCancel();
-//            }
-//        });
-//
-//        // call onCancel() on ESCAPE
-//        contentPane.registerKeyboardAction(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                onCancel();
-//            }
-//        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        buttonOK.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                onOK();
+            }
+        });
+
+        buttonCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                onCancel();
+            }
+        });
+
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                onCancel();
+            }
+        });
+
+        contentPane.registerKeyboardAction(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                onCancel();
+            }
+        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
     private void onOK() {
-        // add your code here
+        Vertex vertex = new Vertex(nameField.getText());
+        GraphController.getInstance().addVertex(vertex);
+        fireEvent(new GraphChangedEvent(this));
         dispose();
     }
 
     private void onCancel() {
-// add your code here if necessary
         dispose();
     }
 
-    public static void main(String[] args) {
-        InputVertex dialog = new InputVertex();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
+    public void fireEvent(GraphChangedEvent event) {
+        Object[] listeners = listenerList.getListenerList();
+
+        for (int i = 0; i < listeners.length; i += 2) {
+            if (listeners[i] == ActionEvent.class) {
+                ((GraphChangedListener) listeners[i + 1]).graphChanged(event);
+            }
+        }
+    }
+
+    public void addListener(GraphChangedListener listener) {
+        listenerList.add(GraphChangedListener.class, listener);
+    }
+
+    public void removeListener(GraphChangedListener listener) {
+        listenerList.remove(GraphChangedListener.class, listener);
     }
 }

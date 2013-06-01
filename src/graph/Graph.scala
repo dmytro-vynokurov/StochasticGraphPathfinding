@@ -79,8 +79,8 @@ class Graph(_vertexes: List[Vertex]) {
 
   implicit def listToCheckpointLine(list: List[Vertex]): CheckpointLine = new CheckpointLine(list)
 
-  def generateCheckpoints() = {
-    if ((start == null) || (finish == null)) throw new IllegalStateException("Start or Finish was not set for a graph")
+  def generateCheckpoints(): Unit = {
+    if ((start == null) || (finish == null)) return;
 
     var currentCheckpointLine = new CheckpointLine(List(start))
     var checkpointsPassed: List[Vertex] = List(start)

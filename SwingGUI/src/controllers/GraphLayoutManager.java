@@ -3,19 +3,23 @@ package controllers;
 import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
-import scala.collection.immutable.List;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static convertion.CollectionsConverter.toJavaList;
+
+//import scala.collection.immutable.List;
 
 public class GraphLayoutManager {
     private static GraphLayoutManager ourInstance = new GraphLayoutManager();
     private Graph graph;
-    private Map<Vertex,GraphLayoutElement> vertexRelation;
+    private Map<Vertex, GraphLayoutElement> vertexRelation;
 
     private GraphLayoutManager() {
         graph = GraphController.getInstance().getGraph();
-        vertexRelation=new HashMap<>(totalElements());
+        vertexRelation = new HashMap<>(totalElements());
     }
 
     public static synchronized GraphLayoutManager getInstance() {
@@ -33,7 +37,7 @@ public class GraphLayoutManager {
 
     public synchronized int getYCellsCount() {
         graph.generateCheckpoints();
-        return maxLength(graph.checkpointLines());
+        return maxLength(toJavaList(graph.checkpointLines()));
     }
 
     public synchronized GraphLayoutElement[] getLayoutElements() {
@@ -42,39 +46,31 @@ public class GraphLayoutManager {
         return elements;
     }
 
-    private int maxLength(List<Graph.CheckpointLine> outerLines) {
+    private int maxLength(List<Graph.CheckpointLine> lines) {
         int max = -1;
-        List<Graph.CheckpointLine> lines = outerLines;
-        while (!lines.isEmpty()) {
-            if (lines.head().checkpoints().length() > max) max = lines.head().checkpoints().length();
-            lines = (List<Graph.CheckpointLine>)lines.tail();
+        for (Graph.CheckpointLine line : lines) {
+            if (line.checkpoints().length() > max) max = line.checkpoints().length();
         }
-        if (max == -1)
-            throw new IllegalStateException("Graph does not contain checkpoint lines or their sizes are wrong");
         return max;
     }
 
     private GraphLayoutElement[] layoutElementsFromVertexes() {
         mapVertexesToLayoutElements();
-        return vertexRelation.values().toArray(new GraphLayoutElement[1]);
+        return vertexRelation.values().toArray(new GraphLayoutElement[0]);
     }
 
-    private void mapVertexesToLayoutElements(){
+    private void mapVertexesToLayoutElements() {
         GraphLayoutElement element;
-        Vertex vertex;
-        List<Vertex> vertexesLeft = graph.vertexes();
+        List<Vertex> vertexes = toJavaList(graph.vertexes());
 
-        for (int i = 0; i < totalElements(); i++) {
-            vertex=vertexesLeft.head();
+        for (Vertex vertex : vertexes) {
             element = new GraphLayoutElement(vertex);
-            vertexRelation.put(vertex,element);
-
-            vertexesLeft = (List<Vertex>)vertexesLeft.tail();
+            vertexRelation.put(vertex, element);
         }
     }
 
     private void setElementsPositions(GraphLayoutElement[] elements) {
-        int maxElementsInLine = maxLength(graph.checkpointLines());
+        int maxElementsInLine = maxLength(toJavaList(graph.checkpointLines()));
         int elementsInLine;
         int indexInLine;
         int lineIndex;
@@ -92,56 +88,54 @@ public class GraphLayoutManager {
     }
 
     private Graph.CheckpointLine lineContainsVertex(Vertex vertex) {
-        List<Graph.CheckpointLine> lines = graph.checkpointLines();
-        while (!lines.isEmpty()) {
-            if (lines.head().checkpoints().contains(vertex)) return lines.head();
-            else lines = (List<Graph.CheckpointLine>)lines.tail();
+        List<Graph.CheckpointLine> lines = toJavaList(graph.checkpointLines());
+
+        for (Graph.CheckpointLine line : lines) {
+            if (line.checkpoints().contains(vertex)) return line;
         }
+
         return null;
     }
 
     private int indexInLine(Vertex vertex, Graph.CheckpointLine line) {
         int result = 0;
-        List<Vertex> checkpointsLeft = line.checkpoints();
-        while (!checkpointsLeft.isEmpty()) {
-            if (vertex.equals(checkpointsLeft.head())) return result;
+        List<Vertex> checkpoints = toJavaList(line.checkpoints());
+
+        for (Vertex v : checkpoints) {
+            if (vertex.equals(v)) return result;
             result++;
-            checkpointsLeft = (List<Vertex>)checkpointsLeft.tail();
         }
+
         throw new IllegalStateException("Current checkpoint line does not contain the vertex");
     }
 
     private int lineIndex(Graph.CheckpointLine line) {
         int result = 0;
-        List<Graph.CheckpointLine> linesLeft = graph.checkpointLines();
-        while (!linesLeft.isEmpty()) {
-            if (line.equals(linesLeft.head())) return result;
+        List<Graph.CheckpointLine> lines = toJavaList(graph.checkpointLines());
+
+        for (Graph.CheckpointLine currentLine : lines) {
+            if (line.equals(currentLine)) return result;
             result++;
-            linesLeft = (List<Graph.CheckpointLine>)linesLeft.tail();
         }
         throw new IllegalStateException("Graph does not contain the checkpoint line");
     }
 
-    public synchronized GraphLayoutElementConnector[] getLayoutElementConnectors(){
+    public synchronized GraphLayoutElementConnector[] getLayoutElementConnectors() {
         mapVertexesToLayoutElements();
-        List<Edge> edgesLeft=graph.edges();
-        GraphLayoutElementConnector[] connectors=new GraphLayoutElementConnector[edgesLeft.length()];
+        List<Edge> edges = toJavaList(graph.edges());
+        GraphLayoutElementConnector[] connectors = new GraphLayoutElementConnector[edges.size()];
 
         GraphLayoutElement begin;
         GraphLayoutElement end;
         String name;
         Edge current;
 
-        int index=0;
-        while(!edgesLeft.isEmpty()){
-            current=edgesLeft.head();
-            begin=vertexRelation.get(current.begin());
-            end=vertexRelation.get(current.end());
-            name=current.weight().toString();
-            connectors[index]=new GraphLayoutElementConnector(begin,end,name);
-
-            index++;
-            edgesLeft=(List<Edge>)edgesLeft.tail();
+        for (int i = 0; i < edges.size(); i++) {
+            current = edges.get(i);
+            begin = vertexRelation.get(current.begin());
+            end = vertexRelation.get(current.end());
+            name = current.weight().toString();
+            connectors[i] = new GraphLayoutElementConnector(begin, end, name);
         }
 
         return connectors;

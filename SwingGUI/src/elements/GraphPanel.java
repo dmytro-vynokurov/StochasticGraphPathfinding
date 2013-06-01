@@ -8,12 +8,11 @@ import javax.swing.*;
 import java.awt.*;
 
 
-
 public class GraphPanel extends JPanel {
 
 
     public static final int CIRCLES_IN_CELL = 3;    //how many circles can fit into one cell by height or width
-    public static final int DEFAULT_PANEL_WIDTH=300;
+    public static final int DEFAULT_PANEL_WIDTH = 300;
     private int xCells = 0;
     private int yCells = 0;
     private int circleSize = -1;
@@ -44,8 +43,8 @@ public class GraphPanel extends JPanel {
     }
 
     private void drawConnectors(Graphics graphics) {
-        GraphLayoutElementConnector[] connectors= GraphLayoutManager.getInstance().getLayoutElementConnectors();
-        for(GraphLayoutElementConnector connector:connectors){
+        GraphLayoutElementConnector[] connectors = GraphLayoutManager.getInstance().getLayoutElementConnectors();
+        for (GraphLayoutElementConnector connector : connectors) {
             drawConnector(graphics, connector);
         }
     }
@@ -113,26 +112,26 @@ public class GraphPanel extends JPanel {
         graphics.drawString(element.getVertex().name(), xName, yName);
     }
 
-    private void drawConnector(Graphics graphics, GraphLayoutElementConnector connector){
-        GraphLayoutElement begin=connector.getBegin();
-        GraphLayoutElement end=connector.getEnd();
-        Dimension beginDimension=getCoordinateOfCircle(begin.getX(),begin.getY());
-        Dimension endDimension=getCoordinateOfCircle(end.getX(),end.getY());
+    private void drawConnector(Graphics graphics, GraphLayoutElementConnector connector) {
+        GraphLayoutElement begin = connector.getBegin();
+        GraphLayoutElement end = connector.getEnd();
+        Dimension beginDimension = getCoordinateOfCircle(begin.getX(), begin.getY());
+        Dimension endDimension = getCoordinateOfCircle(end.getX(), end.getY());
 
-        int xBegin=beginDimension.width+circleSize/2;
-        int yBegin=beginDimension.height+circleSize/2;
-        int xEnd=endDimension.width+circleSize/2;
-        int yEnd=endDimension.height+circleSize/2;
+        int xBegin = beginDimension.width + circleSize / 2;
+        int yBegin = beginDimension.height + circleSize / 2;
+        int xEnd = endDimension.width + circleSize / 2;
+        int yEnd = endDimension.height + circleSize / 2;
 
         graphics.setColor(Color.DARK_GRAY);
-        graphics.drawLine(xBegin,yBegin,xEnd,yEnd);
+        graphics.drawLine(xBegin, yBegin, xEnd, yEnd);
 
-        String name=connector.getName();
-        int xName=(xBegin+xEnd)/2;
-        int yName=(yBegin+yEnd)/2;
+        String name = connector.getName();
+        int xName = (xBegin + xEnd) / 2;
+        int yName = (yBegin + yEnd) / 2;
 
         graphics.setColor(Color.BLACK);
-        graphics.drawString(name,xName,yName);
+        graphics.drawString(name, xName, yName);
     }
 
 

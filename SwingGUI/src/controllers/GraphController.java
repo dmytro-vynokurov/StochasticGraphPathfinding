@@ -1,9 +1,9 @@
 package controllers;
 
+import convertion.CollectionsConverter;
 import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
-import scala.collection.immutable.List;
 import stochastic.NormalDistribution;
 
 public class GraphController {
@@ -30,8 +30,8 @@ public class GraphController {
         graph.removeVertex(vertex);
     }
 
-    public synchronized List<Vertex> getVertexes() {
-        return graph.vertexes();
+    public synchronized java.util.List<Vertex> getVertexes() {
+        return CollectionsConverter.toJavaList(graph.vertexes());
     }
 
     public synchronized void addEdge(Vertex begin, Vertex end, NormalDistribution weight) {
@@ -50,23 +50,24 @@ public class GraphController {
         graph.removeEdge(edge);
     }
 
-    public synchronized List<Edge> getEdges() {
-        return graph.edges();
-    }
-
-    public synchronized void setStart(Vertex vertex) {
-        graph.setStart(vertex);
+    public synchronized java.util.List<Edge> getEdges() {
+        return CollectionsConverter.toJavaList(graph.edges());
     }
 
     public synchronized Vertex getStart() {
         return graph.start();
     }
 
-    public synchronized void setFinish(Vertex vertex) {
-        graph.setFinish(vertex);
+    public synchronized void setStart(Vertex vertex) {
+        if (vertex != null) graph.setStart(vertex);
     }
 
     public synchronized Vertex getFinish() {
         return graph.finish();
     }
+
+    public synchronized void setFinish(Vertex vertex) {
+        if (vertex != null) graph.setFinish(vertex);
+    }
+
 }

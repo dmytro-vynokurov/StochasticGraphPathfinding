@@ -1,7 +1,7 @@
 import _root_.graph.{Graph, Edge, Vertex}
 import _root_.stochastic.NormalDistribution
 
-object Runner {
+object ModelRunner {
   def main(args: Array[String]) {
     val v1 = new Vertex("1")
     val v2 = new Vertex("2")
