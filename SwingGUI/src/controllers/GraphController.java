@@ -27,6 +27,7 @@ public class GraphController {
     }
 
     public synchronized void removeVertex(Vertex vertex) {
+        System.out.println("Received vertex to remove:\t"+vertex);
         graph.removeVertex(vertex);
     }
 

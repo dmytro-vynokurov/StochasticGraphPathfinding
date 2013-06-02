@@ -8,7 +8,8 @@ import graph.Vertex;
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import java.awt.event.*;
-import java.util.List;
+
+import static elements.ComboBoxFiller.addVertexesToComboBox;
 
 public class InputEdge extends JDialog {
     private JPanel contentPane;
@@ -60,15 +61,6 @@ public class InputEdge extends JDialog {
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    }
-
-    private void addVertexesToComboBox(JComboBox comboBox) {
-        GraphController controller = GraphController.getInstance();
-        List<Vertex> vertexes = controller.getVertexes();
-
-        for (Vertex vertex : vertexes) {
-            comboBox.addItem(vertex);
-        }
     }
 
     private void onOK() {
@@ -126,17 +118,17 @@ public class InputEdge extends JDialog {
         Object[] listeners = listenerList.getListenerList();
 
         for (int i = 0; i < listeners.length; i += 2) {
-            if (listeners[i] == ActionEvent.class) {
+            if (listeners[i] == GraphChangedListener.class) {
                 ((GraphChangedListener) listeners[i + 1]).graphChanged(event);
             }
         }
     }
 
-    public void addListener(GraphChangedListener listener) {
+    public void addGraphChangedListener(GraphChangedListener listener) {
         listenerList.add(GraphChangedListener.class, listener);
     }
 
-    public void removeListener(GraphChangedListener listener) {
+    public void removeGraphChangedListener(GraphChangedListener listener) {
         listenerList.remove(GraphChangedListener.class, listener);
     }
 }

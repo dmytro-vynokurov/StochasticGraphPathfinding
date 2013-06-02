@@ -4,10 +4,16 @@ import controllers.GraphController;
 import elements.GraphPanel;
 import eventhandling.GraphChangedEvent;
 import eventhandling.GraphChangedListener;
+import graph.Edge;
+import graph.Vertex;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import static elements.ComboBoxFiller.addEdgesToComboBox;
+import static elements.ComboBoxFiller.addVertexesToComboBox;
 
 
 public class Main {
@@ -18,45 +24,63 @@ public class Main {
     private JButton addEdgeButton;
     private JComboBox comboBoxRemoveEdge;
     private JButton removeEdgeButton;
-    private JButton setStartButton;
     private JComboBox comboBoxSetStart;
+    private JButton setStartButton;
     private JComboBox comboBoxSetFinish;
     private JButton setFinishButton;
     private JPanel graphPanel;
     private JButton findPathButton;
     private JButton setComparisonButton;
+
     private GraphController controller = GraphController.getInstance();
-    private GraphChangedListener repaintGraphListener = new GraphChangedListener() {
+    private GraphChangedListener updateComboBoxesListener = new GraphChangedListener() {
         @Override
         public void graphChanged(GraphChangedEvent event) {
-            graphPanel.repaint();
+            fillComboBoxes();
+        }
+    };
+    private GraphChangedListener graphChangedListener = new GraphChangedListener() {
+        @Override
+        public void graphChanged(GraphChangedEvent event) {
+            updateOnGraphChanged();
+        }
+    };
+    private ActionListener graphChangedActionListener =new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            updateOnGraphChanged();
         }
     };
 
 
+
     public Main() {
+        removeEdgeButton.addActionListener(graphChangedActionListener);
         removeEdgeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                controller.removeEdgeByIndex(comboBoxRemoveEdge.getSelectedIndex());
+                controller.removeEdge((Edge) comboBoxRemoveEdge.getSelectedItem());
             }
         });
+        removeVertexButton.addActionListener(graphChangedActionListener);
         removeVertexButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                controller.removeVertexByIndex(comboBoxRemoveVertex.getSelectedIndex());
+                controller.removeVertex((Vertex) comboBoxRemoveVertex.getSelectedItem());
             }
         });
+        setStartButton.addActionListener(graphChangedActionListener);
         setStartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                controller.setStart(controller.getVertexByIndex(comboBoxSetStart.getSelectedIndex()));
+                controller.setStart((Vertex) comboBoxSetStart.getSelectedItem());
             }
         });
+        setFinishButton.addActionListener(graphChangedActionListener);
         setFinishButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                controller.setFinish(controller.getVertexByIndex(comboBoxSetFinish.getSelectedIndex()));
+                controller.setFinish((Vertex) comboBoxSetFinish.getSelectedItem());
             }
         });
         addVertexButton.addActionListener(new ActionListener() {
@@ -64,7 +88,8 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 InputVertex dialog = new InputVertex();
                 dialog.pack();
-                dialog.addListener(repaintGraphListener);
+                dialog.addGraphChangedListener(graphChangedListener);
+                dialog.addGraphChangedListener(updateComboBoxesListener);
                 dialog.setVisible(true);
             }
         });
@@ -73,11 +98,11 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 InputEdge dialog = new InputEdge();
                 dialog.pack();
-                dialog.addListener(repaintGraphListener);
+                dialog.addGraphChangedListener(graphChangedListener);
+                dialog.addGraphChangedListener(updateComboBoxesListener);
                 dialog.setVisible(true);
             }
         }
-
         );
     }
 
@@ -85,14 +110,46 @@ public class Main {
         graphPanel = new GraphPanel();
     }
 
+    private void fillComboBoxes() {
+        addVertexesToComboBox(comboBoxRemoveVertex);
+        addEdgesToComboBox(comboBoxRemoveEdge);
+        addVertexesToComboBox(comboBoxSetStart);
+        addVertexesToComboBox(comboBoxSetFinish);
+        System.out.println(GraphController.getInstance().getVertexes());
+        System.out.println(GraphController.getInstance().getEdges());
+    }
+
+    public void updateOnGraphChanged(){
+        System.out.println("Updating panel size");
+        graphPanel.repaint();
+        System.out.println("repainted");
+        Dimension preferredSize=mainPanel.getPreferredSize();
+        mainPanel.setSize(preferredSize);
+    }
+
+
 
     public static void main(String[] args) {
+        switchToNimbusLookAndFeel();
+
         JFrame frame = new JFrame("Stochastic graph pathfinding");
         frame.setContentPane(new Main().mainPanel);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+    }
 
+    private static void switchToNimbusLookAndFeel(){
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Cannot switch to Nimbus");
+        }
     }
 
 }

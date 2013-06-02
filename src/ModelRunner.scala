@@ -12,21 +12,27 @@ object ModelRunner {
     val v7 = new Vertex("7")
     val v8 = new Vertex("8")
     Edge(v1, v2, 5, 2)
-    Edge(v2, v4, 5, 2)
-    Edge(v4, v5, 5, 2)
-    Edge(v1, v3, 10, 1)
-    Edge(v3, v5, 10, 1)
-    Edge(v1, v6, 3, 30)
-    Edge(v6, v7, 3, 30)
-    Edge(v7, v8, 3, 30)
-    Edge(v8, v5, 3, 30)
+//    Edge(v2, v4, 5, 2)
+//    Edge(v4, v5, 5, 2)
+//    Edge(v1, v3, 10, 1)
+//    Edge(v3, v5, 10, 1)
+//    Edge(v1, v6, 3, 30)
+//    Edge(v6, v7, 3, 30)
+//    Edge(v7, v8, 3, 30)
+//    Edge(v8, v5, 3, 30)
 
     NormalDistribution.comparator = NormalDistribution.percentComparator(30)
 
 
-    val g = new Graph(List(v1, v2, v3, v4, v5))
-    g setStart v1
-    g setFinish v5
+//    val g = new Graph(List(v1, v2, v3, v4, v5))
+//    g setStart v1
+//    g setFinish v5
+    val g = new Graph(List(v1, v2))
+//    g setStart v1
+//    g setFinish v2
+
+    println(g.start)
+    println(g.finish)
 
     println("Edges:")
     println(g.vertexes.flatMap(_.edges).distinct.mkString("\n"))
@@ -36,6 +42,7 @@ object ModelRunner {
     println("\nResult of dividing into checkpoint lines:")
     println(g.checkpointLines.length)
     for (checkpointLine <- g.checkpointLines) println(checkpointLine)
+    println(g.checkpointLines)
 
 
     g.moveThroughTheGraph()

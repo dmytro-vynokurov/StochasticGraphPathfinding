@@ -10,7 +10,6 @@ import java.util.Map;
 
 import static convertion.CollectionsConverter.toJavaList;
 
-//import scala.collection.immutable.List;
 
 public class GraphLayoutManager {
     private static GraphLayoutManager ourInstance = new GraphLayoutManager();
@@ -41,9 +40,8 @@ public class GraphLayoutManager {
     }
 
     public synchronized GraphLayoutElement[] getLayoutElements() {
-        GraphLayoutElement[] elements = layoutElementsFromVertexes();
-        setElementsPositions(elements);
-        return elements;
+        prepareLayoutElements();
+        return vertexRelation.values().toArray(new GraphLayoutElement[0]);
     }
 
     private int maxLength(List<Graph.CheckpointLine> lines) {
@@ -54,35 +52,39 @@ public class GraphLayoutManager {
         return max;
     }
 
-    private GraphLayoutElement[] layoutElementsFromVertexes() {
+    private void prepareLayoutElements(){
         mapVertexesToLayoutElements();
-        return vertexRelation.values().toArray(new GraphLayoutElement[0]);
+        setElementsPositions();
     }
 
     private void mapVertexesToLayoutElements() {
+        Map<Vertex,GraphLayoutElement> temp=new HashMap<Vertex, GraphLayoutElement>();
+
         GraphLayoutElement element;
         List<Vertex> vertexes = toJavaList(graph.vertexes());
 
         for (Vertex vertex : vertexes) {
             element = new GraphLayoutElement(vertex);
-            vertexRelation.put(vertex, element);
+            temp.put(vertex, element);
         }
+
+        if(!temp.equals(vertexRelation))vertexRelation=temp;
     }
 
-    private void setElementsPositions(GraphLayoutElement[] elements) {
+    private void setElementsPositions() {
         int maxElementsInLine = maxLength(toJavaList(graph.checkpointLines()));
         int elementsInLine;
         int indexInLine;
         int lineIndex;
         Graph.CheckpointLine currentLine;
         Vertex vertex;
-        for (GraphLayoutElement element : elements) {
+        for (GraphLayoutElement element : vertexRelation.values()) {
             vertex = element.vertex;
             currentLine = lineContainsVertex(vertex);
             elementsInLine = currentLine.checkpoints().length();
             indexInLine = indexInLine(vertex, currentLine);
             lineIndex = lineIndex(currentLine);
-            element.setX(lineIndex);
+            element.setX(getXCellsCount()-lineIndex-1);
             element.setY(maxElementsInLine * indexInLine / elementsInLine);
         }
     }
@@ -94,7 +96,7 @@ public class GraphLayoutManager {
             if (line.checkpoints().contains(vertex)) return line;
         }
 
-        return null;
+        throw new IllegalStateException("Vertex in no checkpointLine");
     }
 
     private int indexInLine(Vertex vertex, Graph.CheckpointLine line) {
@@ -121,7 +123,7 @@ public class GraphLayoutManager {
     }
 
     public synchronized GraphLayoutElementConnector[] getLayoutElementConnectors() {
-        mapVertexesToLayoutElements();
+        prepareLayoutElements();
         List<Edge> edges = toJavaList(graph.edges());
         GraphLayoutElementConnector[] connectors = new GraphLayoutElementConnector[edges.size()];
 

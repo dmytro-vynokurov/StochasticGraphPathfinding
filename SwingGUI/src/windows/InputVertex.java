@@ -62,17 +62,17 @@ public class InputVertex extends JDialog {
         Object[] listeners = listenerList.getListenerList();
 
         for (int i = 0; i < listeners.length; i += 2) {
-            if (listeners[i] == ActionEvent.class) {
+            if (listeners[i] == GraphChangedListener.class) {
                 ((GraphChangedListener) listeners[i + 1]).graphChanged(event);
             }
         }
     }
 
-    public void addListener(GraphChangedListener listener) {
+    public void addGraphChangedListener(GraphChangedListener listener) {
         listenerList.add(GraphChangedListener.class, listener);
     }
 
-    public void removeListener(GraphChangedListener listener) {
+    public void removeGraphChangedListener(GraphChangedListener listener) {
         listenerList.remove(GraphChangedListener.class, listener);
     }
 }

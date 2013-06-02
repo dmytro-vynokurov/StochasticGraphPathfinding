@@ -11,17 +11,19 @@ class Graph(_vertexes: List[Vertex]) {
   var finish: Vertex = _
   var checkpointLines: List[CheckpointLine] = List()
 
+  updateStartFinish()
+
   def addVertex(v: Vertex) {
-    vertexes = vertexes ::: List(v)
+    vertexes = v :: vertexes
     updateStartFinish()
   }
 
   def removeVertex(v: Vertex) {
-    vertexes = removeFromList(vertexes, v)
+    vertexes = removeIfExists(vertexes, v)
     updateStartFinish()
   }
 
-  private def removeFromList[T](vertexes: List[T], v: T): List[T] = {
+  private def removeIfExists[T](vertexes: List[T], v: T): List[T] = {
     if (vertexes contains v) vertexes diff List(v)
     else vertexes
   }
@@ -48,25 +50,26 @@ class Graph(_vertexes: List[Vertex]) {
   }
 
   private def updateStartFinish() {
-    val vertexesButStart = {
-      if (start == null) vertexes
-      else removeFromList(vertexes, start)
-    }
-    val vertexesButEnds = {
-      if (finish == null) vertexesButStart
-      else removeFromList(vertexesButStart, finish)
-    }
-
     if (start == null) {
-      start = vertexesButEnds head
-    }
-
-    if (finish == null) {
-      finish = vertexesButEnds last
+      if (finish == null) {
+        if (vertexes.length > 0) {
+          start = vertexes(0)
+          if (start.neighbours.length > 0) finish = start.neighbours(0)
+          else finish = start
+        }
+      } else {
+        if (finish.neighbours.length > 0) start = finish.neighbours(0)
+        else start = finish
+      }
+    } else {
+      if (finish == null) {
+        if (start.neighbours.length > 0) finish = start.neighbours(0)
+        else finish = start
+      }
     }
   }
 
-  def edges = vertexes.flatMap(_.edges)
+  def edges = vertexes.flatMap(_.edges).distinct
 
   class CheckpointLine(_vertexes: List[Vertex]) {
 
@@ -85,7 +88,7 @@ class Graph(_vertexes: List[Vertex]) {
     var currentCheckpointLine = new CheckpointLine(List(start))
     var checkpointsPassed: List[Vertex] = List(start)
 
-    checkpointLines = currentCheckpointLine :: checkpointLines
+    checkpointLines = currentCheckpointLine :: Nil
 
     while (!(currentCheckpointLine isEmpty)) {
       checkpointsPassed = currentCheckpointLine ::: checkpointsPassed
@@ -97,7 +100,11 @@ class Graph(_vertexes: List[Vertex]) {
       if (currentCheckpointLine.length != 0) checkpointLines = List(currentCheckpointLine) ::: checkpointLines
     }
 
-    checkpointLines = List(finish) :: checkpointLines
+    if (start != finish) checkpointLines = List(finish) :: checkpointLines
+
+    val vertexesLeft = vertexes diff checkpointsPassed diff List(finish)
+    if (checkpointLines.flatMap(_.checkpoints).length < vertexes.length)
+      checkpointLines = checkpointLines ::: List(new CheckpointLine(vertexesLeft))
   }
 
   def moveToNextCheckpointLine(currentLine: CheckpointLine, vertexesPassed: Set[Vertex]) = {
