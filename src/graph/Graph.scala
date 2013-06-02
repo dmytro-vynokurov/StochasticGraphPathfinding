@@ -96,6 +96,7 @@ class Graph(_vertexes: List[Vertex]) {
         .flatMap(_.neighbours)
         .filter(!checkpointsPassed.contains(_))
         .filter(_ != finish)
+        .distinct
 
       if (currentCheckpointLine.length != 0) checkpointLines = List(currentCheckpointLine) ::: checkpointLines
     }
@@ -137,5 +138,4 @@ class Graph(_vertexes: List[Vertex]) {
     path = path.reverse
     return path
   }
-
 }

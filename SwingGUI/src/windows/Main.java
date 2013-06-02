@@ -116,16 +116,22 @@ public class Main {
         addEdgesToComboBox(comboBoxRemoveEdge);
         addVertexesToComboBox(comboBoxSetStart);
         addVertexesToComboBox(comboBoxSetFinish);
+        comboBoxSetStart.setSelectedItem(controller.getStart());
+        comboBoxSetFinish.setSelectedItem(controller.getFinish());
+
         System.out.println(GraphController.getInstance().getVertexes());
         System.out.println(GraphController.getInstance().getEdges());
     }
 
     private void updateOnGraphChanged() {
-        System.out.println("Updating panel size");
         graphPanel.repaint();
-        System.out.println("repainted");
         Dimension preferredSize = mainPanel.getPreferredSize();
         mainPanel.setSize(preferredSize);
+
+
+        System.out.println("CheckpointLines::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        System.out.println(controller.getGraph().checkpointLines());
+        System.out.println();
     }
 
 

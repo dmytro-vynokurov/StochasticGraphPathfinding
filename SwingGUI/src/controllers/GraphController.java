@@ -18,7 +18,7 @@ public class GraphController {
         return instance;
     }
 
-    synchronized Graph getGraph() {
+    public synchronized Graph getGraph() {
         return graph;
     }
 
