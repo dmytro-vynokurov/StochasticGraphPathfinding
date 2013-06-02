@@ -1,12 +1,5 @@
 package integration
 
-/**
- * Created with IntelliJ IDEA.
- * User: Vinokurov
- * Date: 21.05.13
- * Time: 10:57
- * To change this template use File | Settings | File Templates.
- */
 object Integrator {
   private val MAX_STEPS = 30000
 
@@ -22,7 +15,7 @@ object Integrator {
     var sum: Double = 0
     while (stepsMade < steps) {
       x += precision
-      sum += precision * (function(x) + function(x - precision)) / 2.
+      sum += precision * (function(x) + function(x - precision)) / 2.0
       stepsMade += 1
     }
     return sum

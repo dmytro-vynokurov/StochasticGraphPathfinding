@@ -52,13 +52,13 @@ public class GraphLayoutManager {
         return max;
     }
 
-    private void prepareLayoutElements(){
+    private void prepareLayoutElements() {
         mapVertexesToLayoutElements();
         setElementsPositions();
     }
 
     private void mapVertexesToLayoutElements() {
-        Map<Vertex,GraphLayoutElement> temp=new HashMap<Vertex, GraphLayoutElement>();
+        Map<Vertex, GraphLayoutElement> temp = new HashMap<>();
 
         GraphLayoutElement element;
         List<Vertex> vertexes = toJavaList(graph.vertexes());
@@ -68,7 +68,7 @@ public class GraphLayoutManager {
             temp.put(vertex, element);
         }
 
-        if(!temp.equals(vertexRelation))vertexRelation=temp;
+        if (!temp.equals(vertexRelation)) vertexRelation = temp;
     }
 
     private void setElementsPositions() {
@@ -84,7 +84,7 @@ public class GraphLayoutManager {
             elementsInLine = currentLine.checkpoints().length();
             indexInLine = indexInLine(vertex, currentLine);
             lineIndex = lineIndex(currentLine);
-            element.setX(getXCellsCount()-lineIndex-1);
+            element.setX(getXCellsCount() - lineIndex - 1);
             element.setY(maxElementsInLine * indexInLine / elementsInLine);
         }
     }

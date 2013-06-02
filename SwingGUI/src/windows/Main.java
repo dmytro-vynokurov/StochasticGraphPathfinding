@@ -45,13 +45,12 @@ public class Main {
             updateOnGraphChanged();
         }
     };
-    private ActionListener graphChangedActionListener =new ActionListener() {
+    private ActionListener graphChangedActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             updateOnGraphChanged();
         }
     };
-
 
 
     public Main() {
@@ -121,14 +120,13 @@ public class Main {
         System.out.println(GraphController.getInstance().getEdges());
     }
 
-    public void updateOnGraphChanged(){
+    private void updateOnGraphChanged() {
         System.out.println("Updating panel size");
         graphPanel.repaint();
         System.out.println("repainted");
-        Dimension preferredSize=mainPanel.getPreferredSize();
+        Dimension preferredSize = mainPanel.getPreferredSize();
         mainPanel.setSize(preferredSize);
     }
-
 
 
     public static void main(String[] args) {
@@ -142,7 +140,7 @@ public class Main {
         frame.setVisible(true);
     }
 
-    private static void switchToNimbusLookAndFeel(){
+    private static void switchToNimbusLookAndFeel() {
         try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -155,12 +153,12 @@ public class Main {
         }
     }
 
-    private static void placeInTheMiddleOfScreen(Component component){
-        Dimension resolution=java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension frameSize=component.getPreferredSize();
-        int x=(resolution.width-frameSize.width)/2;
-        int y=(resolution.height-frameSize.height)/2;
-        component.setBounds(x,y,frameSize.width,frameSize.height);
+    private static void placeInTheMiddleOfScreen(Component component) {
+        Dimension resolution = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize = component.getPreferredSize();
+        int x = (resolution.width - frameSize.width) / 2;
+        int y = (resolution.height - frameSize.height) / 2;
+        component.setBounds(x, y, frameSize.width, frameSize.height);
     }
 
 }

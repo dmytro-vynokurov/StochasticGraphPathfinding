@@ -1,13 +1,5 @@
 package stochastic
 
-/**
- * Created with IntelliJ IDEA.
- * User: Vinokurov
- * Date: 12.05.13
- * Time: 15:47
- * To change this template use File | Settings | File Templates.
- */
-
 import math._
 import integration.Integrator
 
@@ -22,13 +14,9 @@ class NormalDistribution(expectation: Double, sigmaSquare: Double)
     1.0 / sqrt(Pi * 2.0 * s2) * exp(-1.0 * pow(x - m, 2) / 2 / s2)
   }
 
-  def leftBorder(numberOfSigmas: Int = 3): Double = {
-    return m - numberOfSigmas * s
-  }
+  def leftBorder(numberOfSigmas: Int = 3): Double = m - numberOfSigmas * s
 
-  def rightBorder(numberOfSigmas: Int = 3): Double = {
-    return m + numberOfSigmas * s
-  }
+  def rightBorder(numberOfSigmas: Int = 3): Double = m + numberOfSigmas * s
 
   def +(other: NormalDistribution) = new NormalDistribution(this.m + other.m, this.s2 + other.s2)
 
@@ -52,7 +40,7 @@ object NormalDistribution {
   def percentComparator(percent: Int): (NormalDistribution, NormalDistribution) => Boolean =
 
     (a: NormalDistribution, b: NormalDistribution) => {
-      val coefficient = 1 + percent.asInstanceOf[Double] / 100.
+      val coefficient = 1 + percent.asInstanceOf[Double] / 100.0
 
       if ((a.m < b.m) && (a.s2 < b.s2)) false
       else if ((a.m > b.m) && (a.s2 > b.s2)) true

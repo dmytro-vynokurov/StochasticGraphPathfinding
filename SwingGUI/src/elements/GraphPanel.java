@@ -11,8 +11,8 @@ import java.awt.*;
 public class GraphPanel extends JPanel {
 
 
-    public static final int CIRCLES_IN_CELL = 3;    //how many circles can fit into one cell by height or width
-    public static final int DEFAULT_PANEL_WIDTH = 300;
+    private static final int CIRCLES_IN_CELL = 3;    //how many circles can fit into one cell by height or width
+    private static final int DEFAULT_PANEL_WIDTH = 300;
     private static final int MAX_CIRCLE_SIZE = 30;
     private int xCells = 0;
     private int yCells = 0;
@@ -81,7 +81,7 @@ public class GraphPanel extends JPanel {
     private void updateCircleSize() {
         if (wrongCellSize()) return;
 
-        circleSize = Math.min( Math.min(heightOfCell, widthOfCell) / CIRCLES_IN_CELL, MAX_CIRCLE_SIZE);
+        circleSize = Math.min(Math.min(heightOfCell, widthOfCell) / CIRCLES_IN_CELL, MAX_CIRCLE_SIZE);
     }
 
     private boolean wrongCellSize() {
@@ -91,8 +91,8 @@ public class GraphPanel extends JPanel {
     private Point getCoordinateOfCircle(int xCell, int yCell) {
         if (noElementsToDisplay() || wrongCellSize()) return new Point();
 
-        int x = widthOfCell * xCell  + widthOfCell / CIRCLES_IN_CELL;
-        int y = heightOfCell * yCell  + heightOfCell / CIRCLES_IN_CELL;
+        int x = widthOfCell * xCell + widthOfCell / CIRCLES_IN_CELL;
+        int y = heightOfCell * yCell + heightOfCell / CIRCLES_IN_CELL;
 
         return new Point(x, y);
     }

@@ -1,9 +1,9 @@
 package controllers;
 
 public class GraphLayoutElementConnector {
-    GraphLayoutElement begin;
-    GraphLayoutElement end;
-    String name;
+    private GraphLayoutElement begin;
+    private GraphLayoutElement end;
+    private String name;
 
     public GraphLayoutElementConnector(GraphLayoutElement begin, GraphLayoutElement end, String name) {
         this.begin = begin;

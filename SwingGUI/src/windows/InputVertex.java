@@ -58,7 +58,7 @@ public class InputVertex extends JDialog {
         dispose();
     }
 
-    public void fireEvent(GraphChangedEvent event) {
+    private void fireEvent(GraphChangedEvent event) {
         Object[] listeners = listenerList.getListenerList();
 
         for (int i = 0; i < listeners.length; i += 2) {

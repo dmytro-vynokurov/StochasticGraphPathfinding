@@ -82,8 +82,8 @@ class Graph(_vertexes: List[Vertex]) {
 
   implicit def listToCheckpointLine(list: List[Vertex]): CheckpointLine = new CheckpointLine(list)
 
-  def generateCheckpoints(): Unit = {
-    if ((start == null) || (finish == null)) return;
+  def generateCheckpoints() {
+    if ((start == null) || (finish == null)) return
 
     var currentCheckpointLine = new CheckpointLine(List(start))
     var checkpointsPassed: List[Vertex] = List(start)
@@ -107,7 +107,7 @@ class Graph(_vertexes: List[Vertex]) {
       checkpointLines = checkpointLines ::: List(new CheckpointLine(vertexesLeft))
   }
 
-  def moveToNextCheckpointLine(currentLine: CheckpointLine, vertexesPassed: Set[Vertex]) = {
+  def moveToNextCheckpointLine(currentLine: CheckpointLine, vertexesPassed: Set[Vertex]) {
     for (vertex <- currentLine) {
       val neighboursToGo = vertex.neighbours.filter(!vertexesPassed.contains(_))
       for (neighbour <- neighboursToGo) {
@@ -121,7 +121,7 @@ class Graph(_vertexes: List[Vertex]) {
     }
   }
 
-  def moveThroughTheGraph() = {
+  def moveThroughTheGraph() {
     val vertexesPassed = Set[Vertex](finish)
     for (currentLine <- checkpointLines) moveToNextCheckpointLine(currentLine, vertexesPassed)
   }

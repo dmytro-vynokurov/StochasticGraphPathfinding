@@ -19,15 +19,15 @@ class Vertex(_name: String) {
 
   def edgeConnectsWith(other: Vertex): Edge = edges.find(_ touches other).get
 
-  def isConnectedTo(otherVertex:Vertex):Boolean={
-    var vertexesPassed:List[Vertex]=List(this)
-    var currentLine:List[Vertex]=List(this)
-    var nextLine:List[Vertex]=currentLine.flatMap(_.neighbours) diff vertexesPassed
-    while(!nextLine.isEmpty){
+  def isConnectedTo(otherVertex: Vertex): Boolean = {
+    var vertexesPassed: List[Vertex] = List(this)
+    var currentLine: List[Vertex] = List(this)
+    var nextLine: List[Vertex] = currentLine.flatMap(_.neighbours) diff vertexesPassed
+    while (!nextLine.isEmpty) {
       if (nextLine.contains(otherVertex)) return true
-      vertexesPassed=currentLine ::: vertexesPassed
-      currentLine=nextLine
-      nextLine=currentLine.flatMap(_.neighbours) diff vertexesPassed
+      vertexesPassed = currentLine ::: vertexesPassed
+      currentLine = nextLine
+      nextLine = currentLine.flatMap(_.neighbours) diff vertexesPassed
     }
     return false
   }

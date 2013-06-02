@@ -4,8 +4,8 @@ import graph.Vertex;
 
 
 public class GraphLayoutElement {
-    int x = -1;
-    int y = -1;
+    private int x = -1;
+    private int y = -1;
     Vertex vertex;
 
     public GraphLayoutElement(Vertex vertex) {
