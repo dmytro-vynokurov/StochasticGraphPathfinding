@@ -28,9 +28,7 @@ public class GraphPanel extends JPanel {
     }
 
     public void paintComponent(Graphics graphics) {
-        System.out.println("Beginning of the paintComponent");
         super.paintComponent(graphics);
-        System.out.println("In paint component");
 
         updateParameters();
         drawConnectors(graphics);

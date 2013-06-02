@@ -88,6 +88,7 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 InputVertex dialog = new InputVertex();
                 dialog.pack();
+                placeInTheMiddleOfScreen(dialog);
                 dialog.addGraphChangedListener(graphChangedListener);
                 dialog.addGraphChangedListener(updateComboBoxesListener);
                 dialog.setVisible(true);
@@ -98,6 +99,7 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 InputEdge dialog = new InputEdge();
                 dialog.pack();
+                placeInTheMiddleOfScreen(dialog);
                 dialog.addGraphChangedListener(graphChangedListener);
                 dialog.addGraphChangedListener(updateComboBoxesListener);
                 dialog.setVisible(true);
@@ -136,6 +138,7 @@ public class Main {
         frame.setContentPane(new Main().mainPanel);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
+        placeInTheMiddleOfScreen(frame);
         frame.setVisible(true);
     }
 
@@ -150,6 +153,14 @@ public class Main {
         } catch (Exception e) {
             System.out.println("Cannot switch to Nimbus");
         }
+    }
+
+    private static void placeInTheMiddleOfScreen(Component component){
+        Dimension resolution=java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize=component.getPreferredSize();
+        int x=(resolution.width-frameSize.width)/2;
+        int y=(resolution.height-frameSize.height)/2;
+        component.setBounds(x,y,frameSize.width,frameSize.height);
     }
 
 }
