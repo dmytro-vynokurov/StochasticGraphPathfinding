@@ -1,1 +1,6 @@
-This file was created by IntelliJ IDEA 12.1.3 for binding GitHub repository
+This is my bachelor diploma project.
+Utility written in java and scala allows user manage graph with gaussian distributed edges.
+
+The model itself is written in Scala and GUI is written in Java with Swing.
+GUI for this utility is in separate module, and thus is not tightly coupled with the model itself.
+It allows usage of model independently from the GUI

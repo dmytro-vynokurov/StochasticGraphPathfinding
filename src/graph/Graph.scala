@@ -1,6 +1,7 @@
 package graph
 
 import scala.collection.mutable.Set
+import stochastic.{NilDistribution, NormalDistribution}
 
 
 class Graph(_vertexes: List[Vertex]) {
@@ -108,7 +109,7 @@ class Graph(_vertexes: List[Vertex]) {
       checkpointLines = checkpointLines ::: List(new CheckpointLine(vertexesLeft))
   }
 
-  def moveToNextCheckpointLine(currentLine: CheckpointLine, vertexesPassed: Set[Vertex]) {
+  private def moveToNextCheckpointLine(currentLine: CheckpointLine, vertexesPassed: Set[Vertex]) {
     for (vertex <- currentLine) {
       val neighboursToGo = vertex.neighbours.filter(!vertexesPassed.contains(_))
       for (neighbour <- neighboursToGo) {
@@ -122,12 +123,14 @@ class Graph(_vertexes: List[Vertex]) {
     }
   }
 
-  def moveThroughTheGraph() {
+  private def moveThroughTheGraph() {
     val vertexesPassed = Set[Vertex](finish)
     for (currentLine <- checkpointLines) moveToNextCheckpointLine(currentLine, vertexesPassed)
   }
 
   def bestPath: List[Vertex] = {
+    moveThroughTheGraph()
+
     var path = List[Vertex]()
     var currentCheckpoint: Vertex = start
     while (currentCheckpoint.ancestor != null) {
@@ -137,5 +140,21 @@ class Graph(_vertexes: List[Vertex]) {
     path = finish :: path
     path = path.reverse
     return path
+  }
+
+  def bestPathLength(bestPath: List[Vertex]): NormalDistribution = {
+    if (bestPath.length <= 1) return NilDistribution
+    else {
+      var vertexesLeft = bestPath.tail
+      var prevVertex = bestPath.head
+      var sum: NormalDistribution = new NormalDistribution(0, 0);
+
+      while (vertexesLeft.nonEmpty) {
+        sum = sum + prevVertex.edgeConnectsWith(vertexesLeft.head).weight
+        prevVertex = vertexesLeft.head
+        vertexesLeft = vertexesLeft.tail
+      }
+      return sum
+    }
   }
 }

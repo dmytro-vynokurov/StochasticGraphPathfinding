@@ -54,8 +54,19 @@ object NormalDistribution {
     (a: NormalDistribution, b: NormalDistribution) => {
       val profitByA = Integrator.integrate(x => profitFunction(x) * a.density(x), a.leftBorder(), a.rightBorder())
       val profitByB = Integrator.integrate(x => profitFunction(x) * b.density(x), b.leftBorder(), b.rightBorder())
-      if (profitByA > profitByB) false
-      else true
+      println("Profit by "+ a + profitByA)
+      println("Profit by "+ b + profitByB)
+      if (profitByA > profitByB) {
+        println("Choosed first")
+        false
+      }
+      else {
+        println("Choosed second")
+        true
+
+      }
+      //      if (profitByA > profitByB) false
+      //      else true
     }
 
 }

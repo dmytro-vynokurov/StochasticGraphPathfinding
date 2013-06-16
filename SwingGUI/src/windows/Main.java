@@ -31,7 +31,8 @@ public class Main {
     private JPanel graphPanel;
     private JButton findPathButton;
     private JButton setComparisonButton;
-
+    private JTextArea bestPathAsText;
+    private JButton sampleGraphButton;
     private GraphController controller = GraphController.getInstance();
     private GraphChangedListener updateComboBoxesListener = new GraphChangedListener() {
         @Override
@@ -42,13 +43,13 @@ public class Main {
     private GraphChangedListener graphChangedListener = new GraphChangedListener() {
         @Override
         public void graphChanged(GraphChangedEvent event) {
-            updateOnGraphChanged();
+            repaintAndResize();
         }
     };
     private ActionListener graphChangedActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            updateOnGraphChanged();
+            repaintAndResize();
         }
     };
 
@@ -105,35 +106,70 @@ public class Main {
             }
         }
         );
+        findPathButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                bestPathAsText.removeAll();
+                if (controller.existsConnection(controller.getStart(), controller.getFinish())) {
+                    for (Vertex vertex : controller.getBestPath()) {
+                        bestPathAsText.append(vertex.toString());
+                        bestPathAsText.append("\n");
+                    }
+
+                    System.out.println(controller.getBestPath());
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "There is no path between start and finish");
+                }
+            }
+        });
+        sampleGraphButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Vertex v1 = new Vertex("1");
+                Vertex v2 = new Vertex("2");
+                Vertex v3 = new Vertex("3");
+                Vertex v4 = new Vertex("4");
+                Vertex v5 = new Vertex("5");
+                Vertex v6 = new Vertex("6");
+                Vertex v7 = new Vertex("7");
+                Vertex v8 = new Vertex("8");
+                Vertex v9 = new Vertex("9");
+                Vertex v10 = new Vertex("10");
+
+                controller.addVertex(v1);
+                controller.addVertex(v2);
+                controller.addVertex(v3);
+                controller.addVertex(v4);
+                controller.addVertex(v5);
+                controller.addVertex(v6);
+                controller.addVertex(v7);
+                controller.addVertex(v8);
+                controller.addVertex(v9);
+                controller.addVertex(v10);
+
+                controller.setStart(v1);
+                controller.setFinish(v10);
+
+                controller.addEdge(v1, v2, 5., 20.);
+                controller.addEdge(v1, v3, 6., 3.);
+                controller.addEdge(v1, v4, 5., 1.);
+                controller.addEdge(v2, v5, 6., 25.);
+                controller.addEdge(v3, v5, 6., 10.);
+                controller.addEdge(v4, v6,11., 1.);
+                controller.addEdge(v5, v7, 8., 10.);
+                controller.addEdge(v5, v8, 7., 8.);
+                controller.addEdge(v6, v8, 10., 12.);
+                controller.addEdge(v6, v9,3., 1.);
+                controller.addEdge(v7, v10, 3., 6.);
+                controller.addEdge(v8, v10, 3., 6.);
+                controller.addEdge(v9, v10, 4., 2.);
+
+                fillComboBoxes();
+                repaintAndResize();
+            }
+        });
     }
-
-    private void createUIComponents() {
-        graphPanel = new GraphPanel();
-    }
-
-    private void fillComboBoxes() {
-        addVertexesToComboBox(comboBoxRemoveVertex);
-        addEdgesToComboBox(comboBoxRemoveEdge);
-        addVertexesToComboBox(comboBoxSetStart);
-        addVertexesToComboBox(comboBoxSetFinish);
-        comboBoxSetStart.setSelectedItem(controller.getStart());
-        comboBoxSetFinish.setSelectedItem(controller.getFinish());
-
-        System.out.println(GraphController.getInstance().getVertexes());
-        System.out.println(GraphController.getInstance().getEdges());
-    }
-
-    private void updateOnGraphChanged() {
-        graphPanel.repaint();
-        Dimension preferredSize = mainPanel.getPreferredSize();
-        mainPanel.setSize(preferredSize);
-
-
-        System.out.println("CheckpointLines::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-        System.out.println(controller.getGraph().checkpointLines());
-        System.out.println();
-    }
-
 
     public static void main(String[] args) {
         switchToNimbusLookAndFeel();
@@ -165,6 +201,33 @@ public class Main {
         int x = (resolution.width - frameSize.width) / 2;
         int y = (resolution.height - frameSize.height) / 2;
         component.setBounds(x, y, frameSize.width, frameSize.height);
+    }
+
+    private void createUIComponents() {
+        graphPanel = new GraphPanel();
+    }
+
+    private void fillComboBoxes() {
+        addVertexesToComboBox(comboBoxRemoveVertex);
+        addEdgesToComboBox(comboBoxRemoveEdge);
+        addVertexesToComboBox(comboBoxSetStart);
+        addVertexesToComboBox(comboBoxSetFinish);
+        comboBoxSetStart.setSelectedItem(controller.getStart());
+        comboBoxSetFinish.setSelectedItem(controller.getFinish());
+
+        System.out.println("Graph:");
+        System.out.println(controller.getStart());
+        System.out.println(controller.getFinish());
+        System.out.println(controller.getVertexes());
+        System.out.println(controller.getEdges());
+    }
+
+    private void repaintAndResize() {
+        graphPanel.repaint();
+        Dimension mainPanelSize = mainPanel.getSize();
+        Dimension graphPanelSize = graphPanel.getSize();
+        Dimension wideButtonSize = addVertexButton.getSize();
+        mainPanel.setSize(new Dimension(graphPanelSize.width + wideButtonSize.width, mainPanelSize.height));
     }
 
 }

@@ -1,10 +1,15 @@
 package controllers;
 
 import convertion.CollectionsConverter;
+
 import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
 import stochastic.NormalDistribution;
+
+import java.util.List;
+
+import static convertion.CollectionsConverter.*;
 
 public class GraphController {
     private static GraphController instance = new GraphController();
@@ -27,24 +32,15 @@ public class GraphController {
     }
 
     public synchronized void removeVertex(Vertex vertex) {
-        System.out.println("Received vertex to remove:\t" + vertex);
         graph.removeVertex(vertex);
     }
 
-    public synchronized java.util.List<Vertex> getVertexes() {
-        return CollectionsConverter.toJavaList(graph.vertexes());
-    }
-
-    public synchronized void addEdge(Vertex begin, Vertex end, NormalDistribution weight) {
-        Edge.apply(begin, end, weight);
+    public synchronized List<Vertex> getVertexes() {
+        return toJavaList(graph.vertexes());
     }
 
     public synchronized void addEdge(Vertex begin, Vertex end, Double expectation, Double variance) {
         Edge.apply(begin, end, expectation, variance);
-    }
-
-    public synchronized void addEdge(Vertex begin, Vertex end, Double expectation) {
-        Edge.apply(begin, end, expectation, 0);
     }
 
     public synchronized void removeEdge(Edge edge) {
@@ -52,7 +48,7 @@ public class GraphController {
     }
 
     public synchronized java.util.List<Edge> getEdges() {
-        return CollectionsConverter.toJavaList(graph.edges());
+        return toJavaList(graph.edges());
     }
 
     public synchronized Vertex getStart() {
@@ -70,5 +66,22 @@ public class GraphController {
     public synchronized void setFinish(Vertex vertex) {
         if (vertex != null) graph.setFinish(vertex);
     }
+
+    public synchronized boolean existsConnection(Vertex first,Vertex second){
+        System.out.println("Checking connection between");
+        System.out.println(first);
+        System.out.println(second);
+        System.out.println();
+        return first.isConnectedTo(second);
+    }
+
+    public synchronized List<Vertex> getBestPath(){
+        graph.generateCheckpoints();
+        return toJavaList(graph.bestPath());
+    }
+
+
+
+    
 
 }

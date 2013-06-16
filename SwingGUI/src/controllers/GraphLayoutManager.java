@@ -78,9 +78,6 @@ public class GraphLayoutManager {
         int lineIndex;
         Graph.CheckpointLine currentLine;
         Vertex vertex;
-        System.out.println("CheckpointLines::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-        System.out.println(graph.checkpointLines());
-        System.out.println();
         for (GraphLayoutElement element : vertexRelation.values()) {
             vertex = element.vertex;
             currentLine = lineContainsVertex(vertex);
