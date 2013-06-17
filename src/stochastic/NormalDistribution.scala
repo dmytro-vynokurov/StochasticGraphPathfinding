@@ -2,6 +2,7 @@ package stochastic
 
 import math._
 import integration.Integrator
+import scala.beans.BeanProperty
 
 class NormalDistribution(expectation: Double, sigmaSquare: Double)
   extends AnyRef with Ordered[NormalDistribution] {
@@ -32,6 +33,7 @@ class NormalDistribution(expectation: Double, sigmaSquare: Double)
 }
 
 object NormalDistribution {
+  @BeanProperty
   var comparator = determinedComparator
 
   def determinedComparator: (NormalDistribution, NormalDistribution) => Boolean =
@@ -63,11 +65,17 @@ object NormalDistribution {
       else {
         println("Choosed second")
         true
-
       }
-      //      if (profitByA > profitByB) false
-      //      else true
     }
+
+
+  def oneZeroFunction(changePoint:Double)(x:Double): Double={
+    if (x<=changePoint) 1
+    else 0
+  }
+
+  def stepProfitComparator(changePoint:Double):(NormalDistribution, NormalDistribution) => Boolean=
+    profitComparator(oneZeroFunction(changePoint))
 
 }
 

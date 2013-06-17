@@ -1,15 +1,15 @@
 package controllers;
 
-import convertion.CollectionsConverter;
-
 import graph.Edge;
 import graph.Graph;
 import graph.Vertex;
+import scala.collection.immutable.List$;
+import scala.collection.immutable.Nil;
 import stochastic.NormalDistribution;
 
 import java.util.List;
 
-import static convertion.CollectionsConverter.*;
+import static convertion.CollectionsConverter.toJavaList;
 
 public class GraphController {
     private static GraphController instance = new GraphController();
@@ -25,6 +25,19 @@ public class GraphController {
 
     public synchronized Graph getGraph() {
         return graph;
+    }
+
+    public synchronized void clearGraph() {
+        List<Edge> edges = getEdges();
+
+        for (Edge edge : edges) {
+            edge.begin_$eq(null);
+            edge.end_$eq(null);
+        }
+        graph.start_$eq(null);
+        graph.finish_$eq(null);
+        graph.checkpointLines_$eq(List$.MODULE$.<Graph.CheckpointLine>empty());
+        graph.vertexes_$eq(List$.MODULE$.<Vertex>empty());
     }
 
     public synchronized void addVertex(Vertex vertex) {
@@ -67,21 +80,30 @@ public class GraphController {
         if (vertex != null) graph.setFinish(vertex);
     }
 
-    public synchronized boolean existsConnection(Vertex first,Vertex second){
-        System.out.println("Checking connection between");
-        System.out.println(first);
-        System.out.println(second);
-        System.out.println();
+    public synchronized boolean existsConnection(Vertex first, Vertex second) {
         return first.isConnectedTo(second);
     }
 
-    public synchronized List<Vertex> getBestPath(){
+    public synchronized List<Vertex> getBestPath() {
         graph.generateCheckpoints();
         return toJavaList(graph.bestPath());
     }
 
+    public synchronized NormalDistribution getBestPathLength() {
+        graph.generateCheckpoints();
+        return graph.bestPathLength(graph.bestPath());
+    }
 
+    public synchronized void setComparisonTypeDetermined() {
+        NormalDistribution.setComparator(NormalDistribution.determinedComparator());
+    }
 
-    
+    public synchronized void setComparisonTypeFixedDelay(int delayPercentage) {
+        NormalDistribution.setComparator(NormalDistribution.percentComparator(delayPercentage));
+    }
+
+    public synchronized void setComparisonTypeProfitFunction(Double changePoint) {
+        NormalDistribution.setComparator(NormalDistribution.stepProfitComparator(changePoint));
+    }
 
 }

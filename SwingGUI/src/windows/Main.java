@@ -31,7 +31,7 @@ public class Main {
     private JPanel graphPanel;
     private JButton findPathButton;
     private JButton setComparisonButton;
-    private JTextArea bestPathAsText;
+    private JTextArea resultsField;
     private JButton sampleGraphButton;
     private GraphController controller = GraphController.getInstance();
     private GraphChangedListener updateComboBoxesListener = new GraphChangedListener() {
@@ -106,18 +106,30 @@ public class Main {
             }
         }
         );
+        setComparisonButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ChooseComparison dialog = new ChooseComparison();
+                dialog.pack();
+                placeInTheMiddleOfScreen(dialog);
+                dialog.setVisible(true);
+            }
+        });
         findPathButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bestPathAsText.removeAll();
+                resultsField.setText("");
                 if (controller.existsConnection(controller.getStart(), controller.getFinish())) {
                     for (Vertex vertex : controller.getBestPath()) {
-                        bestPathAsText.append(vertex.toString());
-                        bestPathAsText.append("\n");
+                        resultsField.append(vertex.toString());
+                        resultsField.append("\n");
                     }
 
-                    System.out.println(controller.getBestPath());
-
+                    resultsField.append(
+                            "====================\n" +
+                            "Total length : " +
+                            controller.getBestPathLength()
+                    );
                 } else {
                     JOptionPane.showMessageDialog(null, "There is no path between start and finish");
                 }
@@ -126,6 +138,8 @@ public class Main {
         sampleGraphButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                controller.clearGraph();
+
                 Vertex v1 = new Vertex("1");
                 Vertex v2 = new Vertex("2");
                 Vertex v3 = new Vertex("3");
@@ -214,12 +228,6 @@ public class Main {
         addVertexesToComboBox(comboBoxSetFinish);
         comboBoxSetStart.setSelectedItem(controller.getStart());
         comboBoxSetFinish.setSelectedItem(controller.getFinish());
-
-        System.out.println("Graph:");
-        System.out.println(controller.getStart());
-        System.out.println(controller.getFinish());
-        System.out.println(controller.getVertexes());
-        System.out.println(controller.getEdges());
     }
 
     private void repaintAndResize() {
@@ -227,7 +235,7 @@ public class Main {
         Dimension mainPanelSize = mainPanel.getSize();
         Dimension graphPanelSize = graphPanel.getSize();
         Dimension wideButtonSize = addVertexButton.getSize();
-        mainPanel.setSize(new Dimension(graphPanelSize.width + wideButtonSize.width, mainPanelSize.height));
+        mainPanel.setSize(new Dimension(graphPanelSize.width + wideButtonSize.width+200, mainPanelSize.height));
     }
 
 }
