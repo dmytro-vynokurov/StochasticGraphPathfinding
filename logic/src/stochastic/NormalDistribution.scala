@@ -4,8 +4,7 @@ import math._
 import integration.Integrator
 import scala.beans.BeanProperty
 
-class NormalDistribution(expectation: Double, sigmaSquare: Double)
-  extends AnyRef with Ordered[NormalDistribution] {
+class NormalDistribution(expectation: Double, sigmaSquare: Double) extends AnyRef with Ordered[NormalDistribution] {
 
   val m = expectation
   val s2 = sigmaSquare
@@ -37,7 +36,7 @@ object NormalDistribution {
   var comparator = determinedComparator
 
   def determinedComparator: (NormalDistribution, NormalDistribution) => Boolean =
-    (a, b) => (a.m > b.m)
+    (a, b) => a.m > b.m
 
   def percentComparator(percent: Int): (NormalDistribution, NormalDistribution) => Boolean =
 
@@ -46,8 +45,8 @@ object NormalDistribution {
 
       if ((a.m < b.m) && (a.s2 < b.s2)) false
       else if ((a.m > b.m) && (a.s2 > b.s2)) true
-      else if ((a.m < b.m) && (a.m * (coefficient) > b.m)) true
-      else if ((a.m > b.m) && (b.m * (coefficient) > a.m)) false
+      else if ((a.m < b.m) && (a.m * coefficient > b.m)) true
+      else if ((a.m > b.m) && (b.m * coefficient > a.m)) false
       else if (a.m < b.m) false
       else true
     }
@@ -59,11 +58,11 @@ object NormalDistribution {
       println("Profit by "+ a + profitByA)
       println("Profit by "+ b + profitByB)
       if (profitByA > profitByB) {
-        println("Choosed first")
+        println("Selected first")
         false
       }
       else {
-        println("Choosed second")
+        println("Selected second")
         true
       }
     }
