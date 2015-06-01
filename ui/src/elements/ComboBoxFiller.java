@@ -14,9 +14,7 @@ public class ComboBoxFiller {
         GraphController controller = GraphController.getInstance();
         List<Vertex> vertexes = controller.getVertexes();
 
-        for (Vertex vertex : vertexes) {
-            comboBox.addItem(vertex);
-        }
+        vertexes.forEach(comboBox::addItem);
     }
 
     public static void addEdgesToComboBox(JComboBox comboBox) {
@@ -25,9 +23,7 @@ public class ComboBoxFiller {
         GraphController controller = GraphController.getInstance();
         List<Edge> edges = controller.getEdges();
 
-        for (Edge edge : edges) {
-            comboBox.addItem(edge);
-        }
+        edges.forEach(comboBox::addItem);
     }
 
 }
