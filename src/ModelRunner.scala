@@ -1,6 +1,7 @@
-import _root_.graph.{Graph, Edge, Vertex}
+import _root_.graph.{Edge, Graph, Vertex}
 import _root_.stochastic.NormalDistribution
 import integration.Integrator
+
 import scala.util.Random
 
 object ModelRunner {
