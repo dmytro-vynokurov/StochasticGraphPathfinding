@@ -5,6 +5,8 @@ import graph.Graph;
 import graph.Vertex;
 import scala.collection.immutable.List$;
 import scala.collection.immutable.Nil;
+import stochastic.AbstractDistribution;
+import stochastic.DistributionComparisons;
 import stochastic.NormalDistribution;
 
 import java.util.List;
@@ -95,15 +97,15 @@ public class GraphController {
     }
 
     public synchronized void setComparisonTypeDetermined() {
-        NormalDistribution.setComparator(NormalDistribution.determinedComparator());
+        DistributionComparisons.setComparator(DistributionComparisons.determinedComparator());
     }
 
     public synchronized void setComparisonTypeFixedDelay(int delayPercentage) {
-        NormalDistribution.setComparator(NormalDistribution.percentComparator(delayPercentage));
+        DistributionComparisons.setComparator(DistributionComparisons.percentComparator(delayPercentage));
     }
 
     public synchronized void setComparisonTypeProfitFunction(Double changePoint) {
-        NormalDistribution.setComparator(NormalDistribution.stepProfitComparator(changePoint));
+        DistributionComparisons.setComparator(DistributionComparisons.stepProfitComparator(changePoint));
     }
 
 }
