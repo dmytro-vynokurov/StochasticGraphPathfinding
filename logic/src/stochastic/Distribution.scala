@@ -13,7 +13,7 @@ sealed trait AbstractDistribution[T<:AbstractDistribution[T]] extends Ordered[T]
   def rightBorder(): Double
 }
 
-class Distribution(_density:Double=>Double,_leftBorder: Double, _rightBorder:Double) extends AbstractDistribution[Distribution]{
+class Distribution(_density:Double=>Double,_leftBorder: Double, _rightBorder:Double, _name: String) extends AbstractDistribution[Distribution]{
   val expectation = Integrator.integrate(_density,_leftBorder,_rightBorder)
   override def m(): Double = expectation
 
@@ -24,7 +24,7 @@ class Distribution(_density:Double=>Double,_leftBorder: Double, _rightBorder:Dou
     case nil:NilDistribution => this
     case _ =>
       val density: (Double) => Double = y => Integrator.integrate(x => this.density(x) * that.density(y-x),leftBorder,rightBorder)
-      new Distribution(density,leftBorder,rightBorder)
+      new Distribution(density,leftBorder,rightBorder, s"$this+$that")
   }
 
   override def compare(that: Distribution): Int = if (DistributionComparisons.comparator(this, that)) 1 else -1
@@ -34,6 +34,8 @@ class Distribution(_density:Double=>Double,_leftBorder: Double, _rightBorder:Dou
   override def leftBorder(): Double = _leftBorder
 
   override def rightBorder(): Double = _rightBorder
+
+  override def toString: String = _name
 }
 
 class NormalDistribution(expectation: Double, sigmaSquare: Double) extends AbstractDistribution[NormalDistribution] {
