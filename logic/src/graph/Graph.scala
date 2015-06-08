@@ -143,7 +143,7 @@ class Graph(_vertexes: List[Vertex]) {
   }
 
   def bestPathLength(bestPath: List[Vertex]): NormalDistribution = {
-    if (bestPath.length <= 1) return NilDistribution
+    if (bestPath.length <= 1) return new NilDistribution()
     else {
       var vertexesLeft = bestPath.tail
       var prevVertex = bestPath.head

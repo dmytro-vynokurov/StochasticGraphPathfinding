@@ -6,7 +6,7 @@ import stochastic.{NilDistribution, NormalDistribution}
 class Vertex(_name: String) {
   var edges = Set[Edge]()
   val name = _name
-  var distanceFromFinish: NormalDistribution = NilDistribution
+  var distanceFromFinish: NormalDistribution = new NilDistribution
   var ancestor: Vertex = _
 
   def addEdge(edge: Edge) {

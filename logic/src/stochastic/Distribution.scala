@@ -7,7 +7,7 @@ import scala.beans.BeanProperty
 sealed trait AbstractDistribution[T<:AbstractDistribution[T]] extends Ordered[T]{
   def m(): Double
   def s2(): Double
-  def +(distribution: T): T
+  def +(distribution: AbstractDistribution[_]): T
   def density(x:Double):Double
   def leftBorder(): Double
   def rightBorder(): Double
@@ -20,16 +20,14 @@ class Distribution(_density:Double=>Double,_leftBorder: Double, _rightBorder:Dou
   lazy val variance = Integrator.integrate(x=>pow(x - expectation,2),leftBorder(),rightBorder())
   override def s2(): Double = variance
 
-  override def +(that: Distribution): Distribution = {
-    val density: (Double) => Double = y => Integrator.integrate(x => this.density(x) * that.density(y-x),leftBorder,rightBorder)
-    new Distribution(density,leftBorder,rightBorder)
+  override def +(that: AbstractDistribution[_]): Distribution = that match{
+    case nil:NilDistribution => this
+    case _ =>
+      val density: (Double) => Double = y => Integrator.integrate(x => this.density(x) * that.density(y-x),leftBorder,rightBorder)
+      new Distribution(density,leftBorder,rightBorder)
   }
 
-  override def compare(that: Distribution): Int = {
-    val result = DistributionComparisons.comparator(this, that)
-    if (result) return 1
-    else return -1
-  }
+  override def compare(that: Distribution): Int = if (DistributionComparisons.comparator(this, that)) 1 else -1
 
   override def density(x: Double): Double = _density(x)
 
@@ -52,16 +50,19 @@ class NormalDistribution(expectation: Double, sigmaSquare: Double) extends Abstr
 
   def rightBorder(numberOfSigmas: Int): Double = m + numberOfSigmas * s
 
-  def +(other: NormalDistribution) = new NormalDistribution(this.m + other.m, this.s2 + other.s2)
+  def +(other: AbstractDistribution[_]) = other match{
+    case nil: NilDistribution => this
+    case normal: NormalDistribution => new NormalDistribution(this.m + normal.m, this.s2 + normal.s2)
+    case _ => throw new IllegalArgumentException("Normal distribution can be added to normal distribution only")
+  }
 
   override def toString = "N( " + m.toString + " , " + s2.toString + " )"
 
-  def compare(that: NormalDistribution): Int = {
-    if (this == NilDistribution) return 1
-    if (that == NilDistribution) return -1
-    val result = DistributionComparisons.comparator(this, that)
-    if (result) return 1
-    else return -1
+  def compare(that: NormalDistribution): Int = (this,that) match {
+    case (n1:NilDistribution,n2:NilDistribution)=> 0
+    case (n1:NilDistribution,n2:NormalDistribution)=> 1
+    case (n1:NormalDistribution,n2:NilDistribution)=> -1
+    case (n1:NormalDistribution,n2:NormalDistribution)=> if (DistributionComparisons.comparator(this, that)) 1 else -1
   }
 
   override def leftBorder(): Double = leftBorder(3)
@@ -115,7 +116,7 @@ object DistributionComparisons {
 
 }
 
-object NilDistribution extends NormalDistribution(0, 0) {
+class NilDistribution extends NormalDistribution(0, 0) {
   override def density(x: Double) = 0
 
   override def toString = "Nil Distribution"

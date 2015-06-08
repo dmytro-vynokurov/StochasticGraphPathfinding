@@ -48,7 +48,7 @@ object ModelRunner {
     Edge(v9, v10, 4.0,2.0)
 
 //    NormalDistribution.comparator = NormalDistribution.percentComparator(30)
-    NormalDistribution.comparator = NormalDistribution.profitComparator(profitFunction)
+//    NormalDistribution.comparator = NormalDistribution.profitComparator(profitFunction)
 
     def profitFunction(x:Double)={
       if(x<28) 100
